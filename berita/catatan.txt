@@ -1,0 +1,1 @@
+ini dibuat dengan mengambil api dari orang dengan website github "https://github.com/farizdotid/DAFTAR-API-LOKAL-INDONESIA?tab=readme-ov-file#daftar-api";
