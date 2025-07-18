@@ -98,8 +98,6 @@
     function det(encodedData) {
       // console.log(encodedData);
       const ambiel = JSON.parse(atob(encodedData));
-      console.log(ambiel.link);
-      
       $('#detdata').modal('show');
       $('#detdata h3' ).html(ambiel.title);
       $('#detdata img' ).attr('src', ambiel.thumbnail);
