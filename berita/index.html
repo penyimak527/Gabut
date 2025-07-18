@@ -46,6 +46,7 @@
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
   <script src="pagination.js"></script>
+  
 
   <script>
     $(document).ready(
@@ -63,7 +64,7 @@
           html = "";
           kumpul.forEach((item) => {
             html += `
-                    <div class="card m-2 cardataa " style="width: 15rem;  cursor: pointer;" onclick="det('${btoa(
+                    <div class="card m-2 cardat " style="width: 15rem;  cursor: pointer;" onclick="det('${btoa(
                       JSON.stringify(item)
                     )}')" id="carda">
                         <img src="${item.thumbnail}">
@@ -75,7 +76,7 @@
                     `;
           });
           $("#data").html(html);
-          paging($("#data .card"));
+          paging($("#data .cardat"));
         },
       });
     }
@@ -106,4 +107,4 @@
     }
   </script>
 </html>
-<!-- <img src="<?= base_url('images/')?>${item.gambar}" class="card-img-top " alt="${item.gambar}"> -->
+
