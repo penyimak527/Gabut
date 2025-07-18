@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>testing api</title>
+    <title>Berita Sederhana</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -19,10 +19,6 @@
       class="pagination pagination-sm pagination-boxed mb-0"
       id="pagination"
     ></div>
-    <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> -->
 
 <!-- Modal -->
 <div class="modal " tabindex="-1" id="detdata">
@@ -97,7 +93,6 @@
           let start = paging.pageSize * (paging.currentPage - 1);
           let end = start + paging.pageSize;
           let $row = $selector;
-
           $row.hide();
           for (let i = start; i < end; i++) {
             $row.eq(i).show();
@@ -108,17 +103,10 @@
     function det(encodedData) {
       // console.log(encodedData);
       const ambiel = JSON.parse(atob(encodedData));
-      console.log(ambiel);
-      console.log(ambiel.title);
-      console.log(ambiel.description);
-      console.log(ambiel.thumbnail);
-      console.log(ambiel.pubDate);
       $('#detdata').modal('show');
       $('#detdata h3' ).html(ambiel.title);
       $('#detdata img' ).attr('src', ambiel.thumbnail);
       $('#detdata p' ).html(ambiel.description);
-    //   $('#detdata p' ).html(ambiel.pubDate);
-
     }
   </script>
 </html>
