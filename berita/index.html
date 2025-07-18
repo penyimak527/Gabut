@@ -28,8 +28,9 @@
         <h3></h3>
         <div class="d-flex m-1">
             <img src="" alt="" class="rounded">
-            <p class="m-1"></p>
+            <p class="m-1" id="des"></p>
         </div>
+        <p id="info">info detail : <a href="#">link</a></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -100,7 +101,8 @@
       $('#detdata').modal('show');
       $('#detdata h3' ).html(ambiel.title);
       $('#detdata img' ).attr('src', ambiel.thumbnail);
-      $('#detdata p' ).html(ambiel.description);
+      $('#detdata #des' ).html(ambiel.description);
+      $('#detdata  a' ).attr('href',ambiel.link);
     }
   </script>
 </html>
