@@ -13,6 +13,10 @@
   </head>
   <body>
     <center class="bg-secondary"><h1 class="mb-3 p-2 text-light">KUMPULAN BERITA</h1></center>
+    <div class="container p-2">
+  <input type="text" id="search" class="form-control" placeholder="Cari berita...">
+</div>
+
     <div class="data d-flex flex-row flex-wrap gap-2 px-2" id="data"></div>
     <div class="pagination pagination-sm pagination-boxed mb-0"id="pagination"></div>
 
@@ -49,62 +53,76 @@
   
 
   <script>
-    $(document).ready(
-        btn(),
-    );
-    function btn() {
-      $.ajax({
-        url: "https://api-berita-indonesia.vercel.app/cnn/terbaru",
-        type: "GET",
-        success: function (response, status, data) {
-          // console.log(status);
-          // console.log(response.data.posts);
-          const kumpul = response.data.posts;
-          // console.log(kumpul);
-          html = "";
-          kumpul.forEach((item) => {
-            html += `
-                    <div class="card m-2 cardat " style="width: 15rem;  cursor: pointer;" onclick="det('${btoa(
-                      JSON.stringify(item)
-                    )}')" id="carda">
-                        <img src="${item.thumbnail}">
-                        <div class="card-body">
-                            <h4>${item.title}</h4>
-                            <p>${item.description}</p>
-                        </div>
-                    </div> 
-                    `;
-          });
-          $("#data").html(html);
-          paging($("#data .cardat"));
-        },
-      });
-    }
+  let allData = []; // Menyimpan semua data dari API
 
-    function paging($selector, jumlah_tampil = 10) {
-      window.tp = new Pagination("#pagination", {
-        itemsCount: $selector.length,
-        pageSize: parseInt(jumlah_tampil),
-        onPageChange: function (paging) {
-          let start = paging.pageSize * (paging.currentPage - 1);
-          let end = start + paging.pageSize;
-          let $row = $selector;
-          $row.hide();
-          for (let i = start; i < end; i++) {
-            $row.eq(i).show();
-          }
-        },
-      });
-    }
-    function det(encodedData) {
-      // console.log(encodedData);
-      const ambiel = JSON.parse(atob(encodedData));
-      $('#detdata').modal('show');
-      $('#detdata h3' ).html(ambiel.title);
-      $('#detdata img' ).attr('src', ambiel.thumbnail);
-      $('#detdata #des' ).html(ambiel.description);
-      $('#detdata  a' ).attr('href',ambiel.link);
-    }
-  </script>
+  $(document).ready(function () {
+    loadData();
+
+    // Event input pencarian
+    $('#search').on('keyup', function () {
+      const keyword = $(this).val().toLowerCase();
+      const filtered = allData.filter(item =>
+        item.title.toLowerCase().includes(keyword) ||
+        item.description.toLowerCase().includes(keyword)
+      );
+      renderData(filtered);
+    });
+  });
+
+  function loadData() {
+    $.ajax({
+      url: "https://api-berita-indonesia.vercel.app/cnn/terbaru",
+      type: "GET",
+      success: function (response) {
+        allData = response.data.posts;
+        renderData(allData); // tampilkan awal
+      }
+    });
+  }
+
+  function renderData(data) {
+    let html = '';
+    data.forEach(item => {
+      html += `
+        <div class="card m-2 cardat" style="width: 15rem; cursor:pointer;" onclick="det('${btoa(JSON.stringify(item))}')">
+          <img src="${item.thumbnail}">
+          <div class="card-body">
+            <h4>${item.title}</h4>
+            <p>${item.description}</p>
+          </div>
+        </div>`;
+    });
+
+    $('#data').html(html);
+    paging($("#data .cardat")); // jalankan ulang pagination
+  }
+
+  function paging($selector, jumlah_tampil = 10) {
+    window.tp = new Pagination("#pagination", {
+      itemsCount: $selector.length,
+      pageSize: parseInt(jumlah_tampil),
+      onPageChange: function (paging) {
+        let start = paging.pageSize * (paging.currentPage - 1);
+        let end = start + paging.pageSize;
+        let $row = $selector;
+        $row.hide();
+        for (let i = start; i < end; i++) {
+          $row.eq(i).show();
+        }
+      },
+    });
+  }
+
+  function det(encodedData) {
+    const ambiel = JSON.parse(atob(encodedData));
+    $('#detdata').modal('show');
+    $('#detdata h3').html(ambiel.title);
+    $('#detdata img').attr('src', ambiel.thumbnail);
+    $('#detdata #des').html(ambiel.description);
+    $('#detdata a').attr('href', ambiel.link);
+  }
+</script>
 </html>
+
+
 
