@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="m-1">
+    <h2>Todo List</h2>
+    <p>Mencoba simulasi Todo-list pada api</p>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">IdUser</th>
+          <th scope="col">Judul</th>
+          <th scope="col">Isi</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="listdata">
+          <!-- Baris akan diisi oleh jQuery -->
+        </tbody>
+    </table>
+        <div class="pagination pagination-sm pagination-boxed mb-0"id="pagination"></div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah data</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="ftambah">
+                    <div class="form-group">
+                        <label for="">id_user</label>
+                        <input type="number" class="form-control" id="id">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Judul</label>
+                        <input type="text" class="form-control" id="judul">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Isi</label>
+                        <input type="text" class="form-control" id="isi">
+                    </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnsimpan">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="pagination.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      //tambah data
+    $('#btnsimpan').click(function () {
+        const id = $('#id').val();
+        const judul = $('#judul').val();
+        const isi = $('#isi').val();
+        if (id == "" || judul == "" || isi == "") {
+          console.log('data kosong');
+          Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Inputan harus diisi!",
+        });
+        return;
+        }
+        // var form = $('#ftambah');
+        // var formData = form.serialize();
+        $.ajax({
+          url: 'https://jsonplaceholder.typicode.com/posts',
+          type: 'POST',
+          data: JSON.stringify({
+            title : judul,
+            body: isi,
+            userId: id,
+          }),
+          headers: {
+            'Content-type' : 'application/json; charset=UTF-8',
+          },
+          success: function (status, response, data) {
+            console.log(status);
+            console.log(response);
+            console.log(data);
+            
+          },
+        })
+
+    })
+    })
+    $.get({
+      url: "https://jsonplaceholder.typicode.com/posts",
+      contentType: "JSON",
+      success: function (status, response, data) {
+        if (response == "success") {
+          let no = 1;
+          status.forEach((item) => {
+            $("#listdata").append(`
+            <tr>
+              <td>${no++}</td>
+              <td>${item.userId}</td>
+              <td>${item.title}</td>
+              <td>${item.body}</td>
+              <td><button class="btn btn-danger">Hapus</button></td>
+            </tr>
+          `);
+          paging($("#listdata tr"));
+          });
+        }
+      },
+    });
+    function paging($selector, jumlah_tampil = 5) {
+    window.tp = new Pagination("#pagination", {
+      itemsCount: $selector.length,
+      pageSize: parseInt(jumlah_tampil),
+      onPageChange: function (paging) {
+        let start = paging.pageSize * (paging.currentPage - 1);
+        let end = start + paging.pageSize;
+        let $row = $selector;
+        $row.hide();
+        for (let i = start; i < end; i++) {
+          $row.eq(i).show();
+        }
+      },
+    });
+  }
+  </script>
+</html>
